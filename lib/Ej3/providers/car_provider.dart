@@ -17,7 +17,7 @@ class CarProvider with ChangeNotifier {
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        "x-rapidapi-key": "6500c7126dmsh921a2abebf58478p1fd9f0jsn16ce086d3e04",
+        "x-rapidapi-key": "58889646a0msh1817f726237ff73p12e541jsn9f4f6cdadc9f",
         "x-rapidapi-host": "car-data.p.rapidapi.com",
       },
     );

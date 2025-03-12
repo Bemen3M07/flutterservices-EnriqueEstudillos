@@ -1,65 +1,72 @@
-import 'package:P3B_Estudillos/Ejercicio_4/controller/joke_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:P3B_Estudillos/Ejercicio_4/controller/joke_controller.dart';
+import 'package:P3B_Estudillos/Ejercicio_4/model/joke_model.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // Widget raiz de la APP
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Chistes Chistosos',
-      home: JokeView(),
+      home: JokeScreen(),
     );
   }
 }
 
-class JokeView extends StatefulWidget {
+class JokeScreen extends StatefulWidget {
   @override
-  _JokeViewState createState() => _JokeViewState();
+  _JokeScreenState createState() => _JokeScreenState();
 }
 
-class _JokeViewState extends State<JokeView> {
-  final JokeController _controller = JokeController();
-  String _joke = 'Dale al boton para ver el chiste';
+class _JokeScreenState extends State<JokeScreen> {
+  final JokeController _jokeController = JokeController();
+  Joke? _currentJoke;
 
   @override
   void initState() {
     super.initState();
-    _fetchJoke();
+    _loadJoke();
   }
 
-  // Función que pide el chiste al controlador.
-  void _fetchJoke() async {
-    final joke = await _controller.getRandomJoke();
+  Future<void> _loadJoke() async {
+    Joke joke = await _jokeController.fetchJoke();
     setState(() {
-      _joke = joke;
+      _currentJoke = joke;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chistesito aleatorio'),
-      ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            _joke,
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.center,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _currentJoke != null
+                ? Column(
+                    children: [
+                      Text(
+                        _currentJoke!.setup,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        _currentJoke!.punchline,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  )
+                : CircularProgressIndicator(),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _loadJoke,
+              child: Text('Otro'),
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _fetchJoke,
-        tooltip: 'OTRO!',
-        child: Icon(Icons.refresh),
       ),
     );
   }
