@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-// Funció per obtenir una llista d'objectes de tipus CarsModel a partir d'un string json
-List<CarsModel> carsModelFromJson(String str) => List<CarsModel>.from(
-    json.decode(str).map((x) => CarsModel.fromMapToCarObject(x)));
+class CarModel {
+  final int id;
+  final int year;
+  final String make;
+  final String model;
+  final String type;
 
-//Funció per obtenir un string json a partir d'una llista d'objectes de tipus CarsModel
-String carsModelToJson(List<CarsModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.fromObjectToMap())));
-
-class CarsModel {
-  CarsModel({
+  CarModel({
     required this.id,
     required this.year,
     required this.make,
@@ -17,34 +15,31 @@ class CarsModel {
     required this.type,
   });
 
-  final int id;
-  final int year;
-  final String make;
-  final String model;
-  final String type;
+  // Convertir JSON a CarModel
+  factory CarModel.fromJson(Map<String, dynamic> json) {
+    return CarModel(
+      id: json["id"],
+      year: json["year"],
+      make: json["make"],
+      model: json["model"],
+      type: json["type"],
+    );
+  }
 
-  /* 
-    Constructor d'objectes a partir de mapes d'objectes
-    Rep com a paràmetre un Map<String, dynamic> 
-    Aquest mapa són els objectes qeu genera el json decoder
-    dynamic vol dir que pot ser de qualsevol tipus
-    El mètode fromMapToCarObject retorna un objecte de tipus CarsModel
+  // Convertir CarModel a JSON
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "year": year,
+      "make": make,
+      "model": model,
+      "type": type,
+    };
+  }
 
-  */
-  factory CarsModel.fromMapToCarObject(Map<String, dynamic> json) => CarsModel(
-        id: json["id"],
-        year: json["year"],
-        make: json["make"],
-        model: json["model"],
-        type: json["type"],
-      );
-
-  // Mètode per convertir un objecte de tipus CarsModel a un mapa d'objectes
-  Map<String, dynamic> fromObjectToMap() => {
-        "id": id,
-        "year": year,
-        "make": make,
-        "model": model,
-        "type": type,
-      };
+  // Convertir lista de JSON a lista de CarModel
+  static List<CarModel> fromJsonList(String jsonStr) {
+    final data = json.decode(jsonStr);
+    return List<CarModel>.from(data.map((item) => CarModel.fromJson(item)));
+  }
 }
