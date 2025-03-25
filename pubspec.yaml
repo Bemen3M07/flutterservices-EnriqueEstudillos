@@ -7,6 +7,7 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  flame: ^1.26.1
   flutter:
     sdk: flutter
   http: ^1.3.0
@@ -19,3 +20,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/bullet.png
+    - assets/images/enemy.png
+    - assets/images/explosion.png
+    - assets/images/player.png
+    - assets/images/stars.png
+    - assets/images/gorila.png
+    - assets/images/platano.png
+    - assets/images/frieren.png
