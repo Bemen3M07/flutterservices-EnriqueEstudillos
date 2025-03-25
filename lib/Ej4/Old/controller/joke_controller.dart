@@ -1,4 +1,4 @@
-import 'package:P3B_Estudillos/Ejercicio_4/model/joke_model.dart';
+import 'package:P3B_Estudillos/Ej4/Old/model/joke_model.dart';
 
 class JokeController {
   Future<String> getRandomJoke() async {

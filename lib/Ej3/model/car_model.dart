@@ -26,17 +26,6 @@ class CarModel {
     );
   }
 
-  // Convertir CarModel a JSON
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "year": year,
-      "make": make,
-      "model": model,
-      "type": type,
-    };
-  }
-
   // Convertir lista de JSON a lista de CarModel
   static List<CarModel> fromJsonList(String jsonStr) {
     final data = json.decode(jsonStr);
