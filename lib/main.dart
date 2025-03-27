@@ -8,18 +8,36 @@ import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(GameWidget(game: SpaceShooterGame()));
+  runApp(GameWidget(
+    game: SpaceShooterGame(),
+    overlayBuilderMap: {
+      'mainMenu': (context, SpaceShooterGame game) => MainMenu(game: game),
+      'pauseMenu': (context, SpaceShooterGame game) => PauseMenu(game: game),
+      'settingsMenu': (context, SpaceShooterGame game) => SettingsMenu(game: game),
+    },
+    initialActiveOverlays: const ['mainMenu'], // Inicia amb el menú principal
+  ));
 }
 
 class SpaceShooterGame extends FlameGame
     with PanDetector, HasCollisionDetection {
   late Player player;
-  
+  bool isPaused = false;
+
   @override
   Color backgroundColor() => Colors.orange;
 
   @override
   Future<void> onLoad() async {
+    return super.onLoad();
+  }
+
+  void startGame() {
+    overlays.remove('mainMenu');
+    loadGame();
+  }
+
+  Future<void> loadGame() async {
     final parallax = await loadParallaxComponent(
       [
         ParallaxImageData('stars.png'),
@@ -57,6 +75,20 @@ class SpaceShooterGame extends FlameGame
   @override
   void onPanEnd(DragEndInfo info) {
     player.stopShooting();
+  }
+
+  void pauseGame() {
+    isPaused = true;
+    overlays.add('pauseMenu');
+  }
+
+  void resumeGame() {
+    isPaused = false;
+    overlays.remove('pauseMenu');
+  }
+
+  void openSettings() {
+    overlays.add('settingsMenu');
   }
 }
 
@@ -125,12 +157,6 @@ class Bullet extends SpriteComponent
 
     sprite = await game.loadSprite('platano.png');
     add(RectangleHitbox());
-
-    add(
-      RectangleHitbox(
-        collisionType: CollisionType.passive,
-      ),
-    );
   }
 
   @override
@@ -215,4 +241,40 @@ class Explosion extends SpriteAnimationComponent
       ),
     );
   }
+}
+
+class MainMenu extends StatelessWidget {
+  final SpaceShooterGame game;
+  const MainMenu({required this.game});
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: ElevatedButton(
+          onPressed: game.startGame,
+          child: Text('Start Game'),
+        ),
+      );
+}
+
+class PauseMenu extends StatelessWidget {
+  final SpaceShooterGame game;
+  const PauseMenu({required this.game});
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: ElevatedButton(
+          onPressed: game.resumeGame,
+          child: Text('Resume Game'),
+        ),
+      );
+}
+
+class SettingsMenu extends StatelessWidget {
+  final SpaceShooterGame game;
+  const SettingsMenu({required this.game});
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Text('Settings Coming Soon!'),
+      );
 }
